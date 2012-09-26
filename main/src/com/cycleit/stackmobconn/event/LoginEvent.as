@@ -1,3 +1,13 @@
+/*############################################################################*/
+/*                                                                            */
+/*   Cycle-IT                                                                 */
+/*   Copyright @2012                                                          */
+/*   All rights reserved.                                                     */
+/*																			  */
+/*   NOTICE: Cycle-IT permits you to use, modify, and distribute this file    */
+/*   in accordance with the terms of the license agreement accompanying it.   */
+/*                                                                            */
+/*############################################################################*/
 package com.cycleit.stackmobconn.event {
 
 	import flash.events.Event;
