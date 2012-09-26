@@ -9,7 +9,7 @@ It is based on [Logging in with OAuth 2.0 documentation](https://gist.github.com
 It's a Flex Library Project which the following structure:
   * main: Source code of the library
   * example: Source code of a Flex Mobile Project. You should import it into a new Flex Mobile Project.
-  * libs: see [dependencies](#Dependencies) below
+  * libs: see [dependencies](#dependencies) below
 
 ## Dependencies
 
