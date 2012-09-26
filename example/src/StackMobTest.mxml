@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark"
+			   applicationComplete="application1_applicationCompleteHandler(event)" applicationDPI="160">
+	<fx:Script>
+		<![CDATA[
+			import com.cycleit.stackmobconn.event.LoginEvent;
+			import com.cycleit.stackmobconn.net.StackMobService;
+
+			import mx.events.FlexEvent;
+
+			// Your public key
+			public const XStackMobAPIKey:String = "";
+
+			// Username. ie Bruce Wayne
+			public const username:String = "";
+
+			// Password. ie iambatman
+			public const password:String = "";
+
+			private var smService:StackMobService;
+
+			protected function application1_applicationCompleteHandler(event:FlexEvent):void {
+				smService = new StackMobService(XStackMobAPIKey);
+				smService.addEventListener(LoginEvent.LOGIN, loginHandler);
+				smService.login(username, password);
+
+			}
+
+			private function loginHandler(event:LoginEvent):void {
+				trace(event);
+				smService.addEventListener(Event.COMPLETE, completeHandler);
+				smService.get("blogentry");
+			}
+
+			private function completeHandler(event:Event):void {
+				trace(event.currentTarget.data);
+			}
+		]]>
+	</fx:Script>
+</s:Application>
