@@ -20,7 +20,11 @@ It depends on the following libraries (which are included in the project):
 
 ## Example
 
-You should modify the flex mobile application that is living in the example folder:
+A functional example could be found under the example directory. 
+
+### Step by step
+
+First, modify the following constants:
 
     // Your public key
     public const XStackMobAPIKey:String = "";
@@ -28,3 +32,51 @@ You should modify the flex mobile application that is living in the example fold
     public const username:String = "";
     // Password. ie iambatman
     public const password:String = "";
+
+Lets consider that we've created a **blogentry** schema in our StackMob development platform with the following structure:
+
+  * id: blogentry ID
+  * message: blogentry message
+
+Now, we want populate this schema with data, consult it later, update some entries and delete the obsolete ones. So:
+
+Create an StackMobService, using your public key (currently it uses development version only: 0):
+
+    var smService:StackMobService = new StackMobService(XStackMobAPIKey);
+    
+Lets login with previous username and password:
+
+    // login event fired after successful login
+    smService.addEventListener(LoginEvent.LOGIN, loginHandler);
+    // loginError event fired in case of error
+    smService.addEventListener(LoginEvent.LOGIN_ERROR, loginErrorHandler);
+    smService.login(username, password);
+    
+After login you could check your user credentials for further use:
+
+    var credentials:Object = smService.credentials;
+
+Now, you can request StackMob API. Every request fires an Event.COMPLETE in case of a HTTP OK response or an Event.IOErrorEvent in other case. In every case, you can check your StackMobService.data attribute in order to see the result or the error.
+
+#### GET all entries
+
+    smService.get("blogentry");
+    
+#### GET one entry
+    
+    smService.get("blogentry/" + entry.id);
+    
+#### POST an entry
+
+    var entry:Object = {"message" : "A message"}
+    smService.post("blogentry", entry);
+    
+#### PUT an entry
+
+    var updatedEntry:Object = {"message" : "Updated message"}
+    smService.put("blogentry/" + entry.id, updatedEntry);
+    
+#### DEL an entry
+
+    var entry:Object = {"id" : id}
+    smService.del("blogentry", entry);
