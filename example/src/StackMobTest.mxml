@@ -22,6 +22,10 @@
 			protected function application1_applicationCompleteHandler(event:FlexEvent):void {
 				smService = new StackMobService(XStackMobAPIKey);
 				smService.addEventListener(LoginEvent.LOGIN, loginHandler);
+				smService.addEventListener(LoginEvent.LOGIN_ERROR, function(event:Event):void {
+					trace(event);
+					trace(smService.data);
+				});
 				smService.login(username, password);
 
 			}
@@ -33,7 +37,36 @@
 			}
 
 			private function completeHandler(event:Event):void {
-				trace(event.currentTarget.data);
+				smService.removeEventListener(Event.COMPLETE, completeHandler);
+				smService.addEventListener(Event.COMPLETE, createHandler);
+				smService.addEventListener(IOErrorEvent.IO_ERROR, errorHandler);
+				smService.post("blogentry", {"message":"SM AS3 SDK 0.0.1 Test"});
+			}
+
+			private function createHandler(event:Event):void {
+				var newEntry:Object = smService.data;
+				smService.removeEventListener(Event.COMPLETE, createHandler);
+				smService.addEventListener(Event.COMPLETE, getEntryHandler);
+				smService.get("blogentry/" + newEntry.blogentry_id);
+			}
+
+			private function getEntryHandler(event:Event):void {
+				var entry:Object = smService.data;
+				smService.removeEventListener(Event.COMPLETE, getEntryHandler);
+				smService.addEventListener(Event.COMPLETE, updateEntryHandler);
+				smService.put("blogentry/" + entry.blogentry_id, {"message":"Updated Message for AS3 SDK!"});
+			}
+
+			private function updateEntryHandler(event:Event):void {
+				var entry:Object = smService.data;
+				smService.removeEventListener(Event.COMPLETE, updateEntryHandler);
+				var params:URLVariables = new URLVariables();
+				params.blogentry_id = entry.blogentry_id;
+				smService.del("blogentry", params);
+			}
+
+			private function errorHandler(event:IOErrorEvent):void {
+				trace(smService.data);
 			}
 		]]>
 	</fx:Script>

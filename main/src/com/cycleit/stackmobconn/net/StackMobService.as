@@ -36,6 +36,8 @@ package com.cycleit.stackmobconn.net {
 
 		static public const X_WWW_FORM_URLENCODED:String = "application/x-www-form-urlencoded";
 
+		static public const APPLICATION_JSON:String = "application/json";
+
 		static public const X_STACKMOB_API_KEY_HEADER:String = "X-StackMob-API-Key";
 
 		static public const X_STACKMOB_USER_AGENT_HEADER:String = "X-StackMob-User-Agent";
@@ -110,10 +112,12 @@ package com.cycleit.stackmobconn.net {
 		}
 
 		public function post(domain:String, params:Object = null):void {
+			params = JSON.stringify(params);
 			call(URLRequestMethod.POST, domain, params);
 		}
 
 		public function put(domain:String, params:Object = null):void {
+			params = JSON.stringify(params);
 			call(URLRequestMethod.PUT, domain, params);
 		}
 
