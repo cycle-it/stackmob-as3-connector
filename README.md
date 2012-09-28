@@ -40,9 +40,9 @@ Lets consider that we've created a **blogentry** schema in our StackMob developm
 
 Now, we want populate this schema with data, consult it later, update some entries and delete the obsolete ones. So:
 
-Create an StackMobService, using your public key (currently it uses development version only: 0):
+Create an StackMobService, using your public key (development or production):
 
-    var smService:StackMobService = new StackMobService(XStackMobAPIKey);
+    var smService:StackMobService = new StackMobService(XStackMobAPIKey, StackMobService.DEVELOPMENT_VERSION);
     
 Lets login with previous username and password:
 
