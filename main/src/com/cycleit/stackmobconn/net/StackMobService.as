@@ -28,9 +28,13 @@ package com.cycleit.stackmobconn.net {
 	[Event(name = "stackMobLoginError", type = "com.cycleit.stackmobconn.event.LoginEvent")]
 	public class StackMobService implements IEventDispatcher {
 
+		static public const DEVELOPMENT_VERSION:String = "0";
+
+		static public const PRODUCTION_VERSION:String = "1";
+
 		static public const ACCEPT_HEADER:String = "Accept";
 
-		static public const ACCEPT_JSON:String = "application/vnd.stackmob+json; version=0";
+		static public const ACCEPT_JSON:String = "application/vnd.stackmob+json; version=";
 
 		static public const CONTENT_TYPE_HEADER:String = "Content-Type";
 
@@ -48,6 +52,14 @@ package com.cycleit.stackmobconn.net {
 
 		static public const STACKMOB_LOGIN_URL:String = STACKMOB_API_URL + "/user/accessToken";
 
+		static private const USERNAME:String = "username";
+
+		static private const PASSWORD:String = "password";
+
+		static private const TOKEN_TYPE:String = "token_type";
+
+		static private const MAC_TOKEN_TYPE:String = "mac";
+
 		private var _credentials:Object;
 
 		public function get credentials():Object {
@@ -60,12 +72,19 @@ package com.cycleit.stackmobconn.net {
 
 		private var _XStackMobAPIKey:String;
 
+		private var _stackMobVersion:String;
+
 		private var _headers:Array;
 
 		private var _loader:URLLoader;
 
-		public function StackMobService(XStackMobAPIKey:String) {
+		public function StackMobService(XStackMobAPIKey:String, stackMobVersion:String = "0") {
+			initializeService(XStackMobAPIKey, stackMobVersion);
+		}
+
+		private function initializeService(XStackMobAPIKey:String, stackMobVersion:String):void {
 			_XStackMobAPIKey = XStackMobAPIKey;
+			_stackMobVersion = stackMobVersion;
 			_loader = new URLLoader();
 			configureRequestHeaders();
 		}
@@ -76,7 +95,7 @@ package com.cycleit.stackmobconn.net {
 
 		private function configureRequestHeaders():void {
 			_headers = [];
-			_headers[0] = new URLRequestHeader(ACCEPT_HEADER, ACCEPT_JSON);
+			_headers[0] = new URLRequestHeader(ACCEPT_HEADER, ACCEPT_JSON + _stackMobVersion);
 			_headers[1] = new URLRequestHeader(CONTENT_TYPE_HEADER, X_WWW_FORM_URLENCODED);
 			_headers[2] = new URLRequestHeader(X_STACKMOB_API_KEY_HEADER, _XStackMobAPIKey);
 			_headers[3] = new URLRequestHeader(X_STACKMOB_USER_AGENT_HEADER, X_STACKMOB_AS3_USER_AGENT);
@@ -86,9 +105,9 @@ package com.cycleit.stackmobconn.net {
 			var request:URLRequest = new URLRequest(STACKMOB_LOGIN_URL);
 			request.method = URLRequestMethod.POST;
 			var params:URLVariables = new URLVariables();
-			params['username'] = username;
-			params['password'] = password;
-			params['token_type'] = 'mac';
+			params[USERNAME] = username;
+			params[PASSWORD] = password;
+			params[TOKEN_TYPE] = MAC_TOKEN_TYPE;
 			request.data = params;
 			request.requestHeaders = _headers;
 			_loader.addEventListener(Event.COMPLETE, loginResultHandler);

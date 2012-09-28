@@ -20,7 +20,7 @@
 			private var smService:StackMobService;
 
 			protected function application1_applicationCompleteHandler(event:FlexEvent):void {
-				smService = new StackMobService(XStackMobAPIKey);
+				smService = new StackMobService(XStackMobAPIKey, StackMobService.DEVELOPMENT_VERSION);
 				smService.addEventListener(LoginEvent.LOGIN, loginHandler);
 				smService.addEventListener(LoginEvent.LOGIN_ERROR, function(event:Event):void {
 					trace(event);
