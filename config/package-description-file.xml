@@ -1,0 +1,40 @@
+<overviews>
+	<packages>
+		<package name="com.cycleit.stackmobconn.net">
+			<shortDescription>
+				<![CDATA[ 
+                    Classes for connection porpuses. 
+                ]]>
+			</shortDescription>
+			<description>
+				<![CDATA[ 
+                    It contains classes that allows to connect to StackMob REST services. 
+                ]]>
+			</description>
+		</package>
+		<package name="com.cycleit.stackmobconn.event">
+			<shortDescription>
+				<![CDATA[ 
+                    Events package for connecting porpuses.
+                ]]>
+			</shortDescription>
+			<description>
+				<![CDATA[ 
+                    Events package for connecting porpuses related with login operations. 
+                ]]>
+			</description>
+		</package>
+		<package name="com.cycleit.stackmobconn.util">
+			<shortDescription>
+				<![CDATA[ 
+                    Relevant utils. 
+                ]]>
+			</shortDescription>
+			<description>
+				<![CDATA[ 
+                    Relevant utils. 
+                ]]>
+			</description>
+		</package>
+	</packages>
+</overviews>

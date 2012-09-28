@@ -16,15 +16,32 @@ package com.cycleit.stackmobconn.util {
 
 	import flash.utils.ByteArray;
 
+	/**
+	 * The StackMobUtils final class contains utils that allows to manipulate headers for consuming StackMob REST API.
+	 */
 	public final class StackMobUtils {
 
 		static private const NONCE:String = "n";
 
 		static private const LINEFEED:String = "\u000A";
 
+		/**
+		 * @private
+		 */
 		public function StackMobUtils() {
 		}
 
+		/**
+		 * Generates the Authorization header.
+		 *
+		 * @param method HTTP operation method used. Posible values: GET, POST, PUT and DELETE
+		 * @param mackey mac key obtained during login
+		 * @param accessToken Token obtained during login
+		 * @param host URL of the StackMob API
+		 * @param domain Schema that's being populated
+		 *
+		 * @return i.e. Authorization:MAC id="vV6xEfVgQZv4ABJ6VZDHlQfCaqKgFZuN",ts="1343427512",nonce="n2468",mac="79js6rr3ynOCyssOHuGpGikfpvs="
+		 */
 		static public function generateAuthorization(method:String, mackey:String, accessToken:String, host:String,
 													 domain:String):String {
 
@@ -41,11 +58,17 @@ package com.cycleit.stackmobconn.util {
 			return authorization;
 		}
 
+		/**
+		 * @private
+		 */
 		static private function createBaseString(ts:Number, nonce:String, method:String, uri:String, host:String,
 												 port:uint = 80):String {
 			return ts + LINEFEED + NONCE + LINEFEED + method + LINEFEED + uri + LINEFEED + host + LINEFEED + port + LINEFEED + LINEFEED;
 		}
 
+		/**
+		 * @private
+		 */
 		static private function encodeUTFBytes(data:String):String {
 			var bytes:ByteArray = new ByteArray();
 			bytes.writeUTFBytes(data);
