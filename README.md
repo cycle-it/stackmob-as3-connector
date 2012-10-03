@@ -33,10 +33,12 @@ First, modify the following constants:
     // Password. ie iambatman
     public const password:String = "";
 
-Lets consider that we've created a **blogentry** schema in our StackMob development platform with the following structure:
+Let's consider that we've created a **blogentry** schema in our StackMob development platform with the following structure:
 
   * id: blogentry ID
   * message: blogentry message
+
+**NOTE**: If we wanna hit an schema which does not exist (retrieving, updating or deleting entries) we'll receive an error reporting that situation. However, we can create an schema directly & dinamically making a POST request against the schema we want to create.
 
 Now, we want populate this schema with data, consult it later, update some entries and delete the obsolete ones. So:
 
@@ -44,7 +46,7 @@ Create an StackMobService, using your public key (development or production):
 
     var smService:StackMobService = new StackMobService(XStackMobAPIKey, StackMobService.DEVELOPMENT_VERSION);
     
-Lets login with previous username and password:
+Let's login with previous username and password:
 
     // login event fired after successful login
     smService.addEventListener(LoginEvent.LOGIN, loginHandler);
@@ -69,6 +71,7 @@ Now, you can request StackMob API. Every request fires an Event.COMPLETE in case
 #### POST an entry
 
     var entry:Object = {"message" : "A message"}
+    // If the schema does not exist, it'll be created
     smService.post("blogentry", entry);
     
 #### PUT an entry
