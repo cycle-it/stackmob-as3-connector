@@ -1,12 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!---
+StackMob AS3 connector example.
+
+You must fill the following constants in order to use this example:
+- XStackMobAPIKey: Your public development/production StackMob API Key
+- username       : Existing username in the StackMob default users schema
+- password		 : Your username's password
+- schema		 : The schema we're going to use in this example.
+
+How this example works:
+It's a flex mobile project, but it's quite easy to migrate it to desktop or web projects, even to flex or flash only projects. The library does not have
+any flex dependencies, it's pure AS3 :-)
+
+We're assuming that you've created an schema called blogentry. If you do so, the example will terminate leaving your schema as is.
+
+If the schema does not exist (you haven't created the schema previously), and
+- you leave the example as it's right now, it'll fail. You can check the error handler for more info.
+- you comment first get and uncomment first post, the schema will be created on demand. Then, a new entry will be posted.
+
+This example shows how:
+- to retrieve all data contained in an schema.
+- to retrieve a concrete entry within an schema.
+- to crete new entries.
+- to update existing entries.
+- to delete existing entries.
+
+Considerations:
+1. We must be logged in order to use this example
+2. After every successful operation you can check the StackMobService.data attribute. It'll contain relevant information about the operation we've already executed.
+3. In case of errors, the data attribute will contain usefull information regarding the exact problema (i.e. the schema does not exist, etc.)
+
+References:
+- StackMob oauth2 authentication example		: https://gist.github.com/f5e8dc879f506c9a0268
+- StackMob HMAC Authorization header creation	: https://gist.github.com/9515a7ecdbb5625b348b
+- StackMob schema creation						: https://dashboard.stackmob.com/api/schemas/
+- StackMob developer portal						: https://developer.stackmob.com/
+- StackMob tutorials							: https://developer.stackmob.com/tutorials -->
 <s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark"
-			   applicationComplete="application1_applicationCompleteHandler(event)" applicationDPI="160">
+			   applicationComplete="applicationCompleteHandler(event)" applicationDPI="160">
 	<fx:Script>
 		<![CDATA[
 			import com.cycleit.stackmobconn.event.LoginEvent;
 			import com.cycleit.stackmobconn.net.StackMobService;
 
 			import mx.events.FlexEvent;
+
+			static public const URL_SEPARATOR:String = "/";
 
 			// Your public key
 			public const XStackMobAPIKey:String = "";
@@ -17,56 +56,90 @@
 			// Password. ie iambatman
 			public const password:String = "";
 
+			// Schema that exists, ie blogentry
+			public const schema:String = "";
+
+			// Schema that does not exist, is blogentry_notexists".
+			// public const schema:String = "blogentry_notexists"
+
 			private var smService:StackMobService;
 
-			protected function application1_applicationCompleteHandler(event:FlexEvent):void {
+			protected function applicationCompleteHandler(event:FlexEvent):void {
+				// Creation of the stackMobService using our development/production key, and indicating which version we're using: development or production.
 				smService = new StackMobService(XStackMobAPIKey, StackMobService.DEVELOPMENT_VERSION);
+				// Adding handlers for login and login error and error events
 				smService.addEventListener(LoginEvent.LOGIN, loginHandler);
+				smService.addEventListener(IOErrorEvent.IO_ERROR, errorHandler);
 				smService.addEventListener(LoginEvent.LOGIN_ERROR, function(event:Event):void {
 					trace(event);
 					trace(smService.data);
 				});
+				// login the user
 				smService.login(username, password);
-
 			}
 
+			// After login: let's consult the blogentry schema. In this case, we're considering that the schema has been already created.
+			// NOTE: If it does not exist it'll fire an IO_ERROR event. 
+			// NOTE2: Comment this handler and uncomment the following one to create an schema on demand.
+			// 		  Then we can retrieves all the info contained in the schema.
 			private function loginHandler(event:LoginEvent):void {
-				trace(event);
+				trace(JSON.stringify(smService.data));
 				smService.addEventListener(Event.COMPLETE, completeHandler);
-				smService.get("blogentry");
+				smService.get(schema);
 			}
 
+			/*
+			// Let's create a new schema called blogentry2, which will be initialized with and blogentry2_id and a message attribute
+			// If the schema does not exist, it'll be created first, and then a new entry will be posted.
+			private function loginHandler(event:LoginEvent):void {
+			smService.addEventListener(Event.COMPLETE, completeHandler);
+			smService.post(schema, {"message":"SM AS3 SDK 0.0.1 Test"});
+			} */
+
+			// Let's post another entry
 			private function completeHandler(event:Event):void {
+				trace(JSON.stringify(smService.data));
 				smService.removeEventListener(Event.COMPLETE, completeHandler);
 				smService.addEventListener(Event.COMPLETE, createHandler);
-				smService.addEventListener(IOErrorEvent.IO_ERROR, errorHandler);
-				smService.post("blogentry", {"message":"SM AS3 SDK 0.0.1 Test"});
+				smService.post(schema, {"message":"SM AS3 SDK 0.0.1 Test"});
 			}
 
+			// Retrieves the entry we created in the previous request.
+			// URL: schema/id
 			private function createHandler(event:Event):void {
+				trace(JSON.stringify(smService.data));
 				var newEntry:Object = smService.data;
 				smService.removeEventListener(Event.COMPLETE, createHandler);
 				smService.addEventListener(Event.COMPLETE, getEntryHandler);
-				smService.get("blogentry/" + newEntry.blogentry_id);
+				smService.get(schema + URL_SEPARATOR + newEntry.blogentry_id);
 			}
 
+			// Updates previous entry.
+			// URL: schema/id
+			// params: new entry json format. It'll be stringified internally.
 			private function getEntryHandler(event:Event):void {
+				trace(JSON.stringify(smService.data));
 				var entry:Object = smService.data;
 				smService.removeEventListener(Event.COMPLETE, getEntryHandler);
 				smService.addEventListener(Event.COMPLETE, updateEntryHandler);
-				smService.put("blogentry/" + entry.blogentry_id, {"message":"Updated Message for AS3 SDK!"});
+				smService.put(schema + URL_SEPARATOR + entry.blogentry_id, {"message":"Updated Message for AS3 SDK!"});
 			}
 
+			// Deletes previous entry
+			// URL: schema
+			// params: like POST vars as an URLVariables object
 			private function updateEntryHandler(event:Event):void {
+				trace(JSON.stringify(smService.data));
 				var entry:Object = smService.data;
 				smService.removeEventListener(Event.COMPLETE, updateEntryHandler);
 				var params:URLVariables = new URLVariables();
 				params.blogentry_id = entry.blogentry_id;
-				smService.del("blogentry", params);
+				smService.del(schema, params);
 			}
 
+			// Error handler
 			private function errorHandler(event:IOErrorEvent):void {
-				trace(smService.data);
+				trace(JSON.stringify(smService.data));
 			}
 		]]>
 	</fx:Script>
