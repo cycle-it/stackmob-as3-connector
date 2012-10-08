@@ -4,6 +4,14 @@ StackMob AS3 oauth2 API Connector is an actionscript3 library that allows to con
 
 It is based on [Logging in with OAuth 2.0 documentation](https://gist.github.com/f5e8dc879f506c9a0268) provided by StackMob team.
 
+It can be used in any AS3 related project, such as:
+
+  * Web project (Flash or Flex)
+  * Desktop project (AIR)
+  * Mobile project (AIR)
+
+**NOTE**: Bear in mind that web projects require extra steps in order to allow this library to work. Read more at [Flash Player Authorization Header tech note](http://helpx.adobe.com/flash-player/kb/authorization-header-request-flash-player.html)
+
 ## Source code
 
 It's a Flex Library Project which the following structure:
