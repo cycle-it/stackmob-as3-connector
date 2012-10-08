@@ -15,7 +15,7 @@ It's a Flex Library Project which the following structure:
 
 It depends on the following libraries (which are included in the project):
 
-  * **[as3corelib](https://github.com/mikechambers/as3corelib)**: for the HMAC SHA-1 hash generation of the Authoritation header.
+  * **[as3corelib](https://github.com/mikechambers/as3corelib)**: for the HMAC SHA-1 hash generation of the Authorization header.
   * **[base64](http://www.sociodox.com/base64.html)**: for Base64 encoding the previous generated hash.
 
 ## Example
