@@ -63,7 +63,7 @@ package com.cycleit.stackmobconn.util {
 		 */
 		static private function createBaseString(ts:Number, nonce:String, method:String, uri:String, host:String,
 												 port:uint = 80):String {
-			return ts + LINEFEED + NONCE + LINEFEED + method + LINEFEED + uri + LINEFEED + host + LINEFEED + port + LINEFEED + LINEFEED;
+			return ts + LINEFEED + nonce + LINEFEED + method + LINEFEED + uri + LINEFEED + host + LINEFEED + port + LINEFEED + LINEFEED;
 		}
 
 		/**
