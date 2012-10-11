@@ -14,7 +14,7 @@ It can be used in any AS3 related project, such as:
 
 ## Source code
 
-It's a Flex Library Project which the following structure:
+It's a Flex Library Project with the following structure:
   * main: Source code of the library
   * example: Source code of a Flex Mobile Project. You should import it into a new Flex Mobile Project.
   * libs: see [dependencies](#dependencies) below
