@@ -203,7 +203,7 @@ package com.cycleit.stackmobconn.net {
 		 * @private
 		 */
 		private function loginResultHandler(event:Event):void {
-			_loader.removeEventListener(Event.COMPLETE, loginResultHandler);
+			removeLoginHandlers();
 			_credentials = JSON.parse(_loader.data);
 			_loader.dispatchEvent(new LoginEvent(LoginEvent.LOGIN));
 		}
@@ -212,8 +212,16 @@ package com.cycleit.stackmobconn.net {
 		 * @private
 		 */
 		private function loginErrorHandler(event:Event):void {
-			_loader.removeEventListener(IOErrorEvent.IO_ERROR, loginErrorHandler);
+			removeLoginHandlers();
 			_loader.dispatchEvent(new LoginEvent(LoginEvent.LOGIN_ERROR));
+		}
+
+		/**
+		 * @private
+		 */
+		private function removeLoginHandlers():void {
+			_loader.removeEventListener(Event.COMPLETE, loginResultHandler);
+			_loader.removeEventListener(IOErrorEvent.IO_ERROR, loginErrorHandler);
 		}
 
 		/**
