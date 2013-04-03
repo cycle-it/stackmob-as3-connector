@@ -10,10 +10,11 @@
 /*############################################################################*/
 package com.cycleit.stackmobconn.util {
 
-	import com.adobe.crypto.HMAC;
-	import com.adobe.crypto.SHA1;
+	import com.hurlant.crypto.Crypto;
+	import com.hurlant.crypto.hash.HMAC;
+	import com.hurlant.util.Hex;
 	import com.sociodox.utils.Base64;
-
+	
 	import flash.utils.ByteArray;
 
 	/**
@@ -45,17 +46,35 @@ package com.cycleit.stackmobconn.util {
 		static public function generateAuthorization(method:String, mackey:String, accessToken:String, host:String,
 													 domain:String):String {
 
+			var cleanHost:String = host.replace(/http:\/\/|https:\/\//g,'').replace('/','');
+			
+			var splitHost:Array = cleanHost.split(':');
+			
+			var	hostNoPort:String = splitHost[0];
+			var port:uint = splitHost.length > 1 ? parseInt(splitHost[1]) : 80;
+			
 			var ts:Number = (new Date().time / 1000) | 0;
 			var nonce:String = NONCE + ((Math.random() * 10000) | 0);
 
-			var base:String = createBaseString(ts, nonce, method, host, domain);
+			if (domain.indexOf('/') != 0) {
+				domain = "/"+domain;
+			}
+			
+			var base:String = createBaseString(ts, nonce, method, domain, hostNoPort, port);
 
-			var bstring:String = HMAC.hash(accessToken, base, SHA1);
-
-			var mac:String = encodeUTFBytes(bstring);
-
-			var authorization:String = 'MAC id="' + mackey + '",ts="' + ts + '",nonce="' + nonce + '",mac="' + mac + '"';
+			var mac:String = generateMAC(mackey, base);
+				
+			var authorization:String = 'MAC id="' + accessToken + '",ts="' + ts + '",nonce="' + nonce + '",mac="' + mac + '"';
 			return authorization;
+		}
+		
+		static private function generateMAC(mackey:String, base:String):String {
+			var hmac:HMAC = Crypto.getHMAC("sha1");
+			var key:ByteArray = Hex.toArray(Hex.fromString(mackey));
+			var message:ByteArray = Hex.toArray(Hex.fromString(base));
+			var result:ByteArray = hmac.compute(key,message);
+			var mac:String = Base64.encode(result);
+			return mac;
 		}
 
 		/**
