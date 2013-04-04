@@ -12,7 +12,7 @@ package com.cycleit.stackmobconn.net {
 
 	import com.cycleit.stackmobconn.event.LoginEvent;
 	import com.cycleit.stackmobconn.util.StackMobUtils;
-
+	
 	import flash.events.Event;
 	import flash.events.IEventDispatcher;
 	import flash.events.IOErrorEvent;
@@ -75,7 +75,7 @@ package com.cycleit.stackmobconn.net {
 		/**
 		 * StackMob ActionScript3 SDK versión
 		 */
-		static public const X_STACKMOB_AS3_USER_AGENT:String = "SM AS3 0.1.0";
+		static public const X_STACKMOB_AS3_USER_AGENT:String = "SM AS3 0.2.0";
 
 		static private const ACCEPT_HEADER:String = "Accept";
 
