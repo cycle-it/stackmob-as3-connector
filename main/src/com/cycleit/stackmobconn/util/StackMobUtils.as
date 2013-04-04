@@ -12,8 +12,8 @@ package com.cycleit.stackmobconn.util {
 
 	import com.hurlant.crypto.Crypto;
 	import com.hurlant.crypto.hash.HMAC;
+	import com.hurlant.util.Base64;
 	import com.hurlant.util.Hex;
-	import com.sociodox.utils.Base64;
 	
 	import flash.utils.ByteArray;
 
@@ -68,12 +68,15 @@ package com.cycleit.stackmobconn.util {
 			return authorization;
 		}
 		
+		/**
+		 * @private
+		 */ 
 		static private function generateMAC(mackey:String, base:String):String {
 			var hmac:HMAC = Crypto.getHMAC("sha1");
 			var key:ByteArray = Hex.toArray(Hex.fromString(mackey));
 			var message:ByteArray = Hex.toArray(Hex.fromString(base));
 			var result:ByteArray = hmac.compute(key,message);
-			var mac:String = Base64.encode(result);
+			var mac:String = Base64.encodeByteArray(result);
 			return mac;
 		}
 
@@ -85,14 +88,5 @@ package com.cycleit.stackmobconn.util {
 			return ts + LINEFEED + nonce + LINEFEED + method + LINEFEED + uri + LINEFEED + host + LINEFEED + port + LINEFEED + LINEFEED;
 		}
 
-		/**
-		 * @private
-		 */
-		static private function encodeUTFBytes(data:String):String {
-			var bytes:ByteArray = new ByteArray();
-			bytes.writeUTFBytes(data);
-			bytes.position = 0;
-			return Base64.encode(bytes);
-		}
 	}
 }
